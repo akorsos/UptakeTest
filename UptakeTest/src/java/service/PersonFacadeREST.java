@@ -10,6 +10,9 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -49,14 +52,26 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+    public String remove(@PathParam("id") Integer id) {
+        return super.remove(super.find(id));
     }
 
+    @GET
+    @Path("family")
+    public List<Person> family() {        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Person> q = cb.createQuery(Person.class);
+        Root<Person> c = q.from(Person.class);
+        q.select(c);
+        q.orderBy(cb.asc(c.get("lastname")));        
+        return em.createQuery(q).getResultList();
+    }
+    
     @GET
     @Path("{id}")
     @Produces({"application/xml", "application/json"})
     public Person find(@PathParam("id") Integer id) {
+        System.out.println("Find ID");
         return super.find(id);
     }
 
@@ -64,6 +79,7 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
     @Override
     @Produces({"application/xml", "application/json"})
     public List<Person> findAll() {
+        System.out.println("Find All");
         return super.findAll();
     }
 

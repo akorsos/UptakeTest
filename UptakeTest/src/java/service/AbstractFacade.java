@@ -7,6 +7,7 @@ package service;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  *
@@ -29,8 +30,9 @@ public abstract class AbstractFacade<T> {
         getEntityManager().merge(entity);
     }
 
-    public void remove(T entity) {
+    public String remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));
+        return "Person removed";
     }
 
     public T find(Object id) {
@@ -59,5 +61,4 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-    
 }
