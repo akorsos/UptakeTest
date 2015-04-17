@@ -1,0 +1,3 @@
+ak\entities\Person.class
+service\PersonFacadeREST.class
+service\AbstractFacade.class
